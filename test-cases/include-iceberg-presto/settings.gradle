@@ -1,0 +1,70 @@
+
+buildscript {
+  dependencies {
+    def props = new Properties()
+    file(System.getProperty('pluginClasspathFile')).withInputStream {
+      props.load(it)
+    }
+    classpath(files(props.getProperty('implementation-classpath').split(':')))
+  }
+}
+
+apply plugin: 'org.caffinitas.gradle.includemavenbuild'
+
+includeMavenBuild {
+  builds {
+    create('presto') {
+      rootDirectory.set(file('../git-clones/prestodb'))
+      disableDefaults()
+      // logLevel.set(1) // 0=DEBUG 1=INFO
+    }
+  }
+}
+
+includeBuild('../git-clones/iceberg-for-presto') {
+  name = 'iceberg'
+
+  def propertyPattern = java.util.regex.Pattern.compile("\\s*(\\S+)\\s*=\\s*(\\S+)\\s*")
+
+  // Iceberg's "dependency recommendation" stuff doesn't work when the Iceberg build is included
+  // here. So parse Iceberg's versions.props file here and substitute the affected dependencies.
+  def icebergVersions = [:]
+  file("$projectDir/versions.props").readLines().each { line ->
+    def m = propertyPattern.matcher(line.trim())
+    if (m.matches()) {
+      icebergVersions[m.group(1)] = m.group(2)
+    }
+  }
+  // TODO These dependencies are pulled from
+  //   'com.google.cloud:google-cloud-bom:0.164.0'
+  // via
+  //   'com.google.cloud:libraries-bom:24.1.0'
+  // but that somehow doesn't work in this case with includedBuild + substituted dependencies
+  icebergVersions['com.google.cloud:google-cloud-nio'] = '0.123.17'
+  icebergVersions['com.google.cloud:google-cloud-storage'] = '2.2.2'
+
+  dependencySubstitution {
+    ['iceberg-api',
+     'iceberg-bundled-guava',
+     'iceberg-common',
+     'iceberg-core',
+     'iceberg-hive-metastore',
+     'iceberg-nessie',
+     'iceberg-parquet'].each {
+      substitute(module("org.apache.iceberg:$it")).using(project(":$it"))
+    }
+
+    all {
+      def req = requested
+      if (req instanceof ModuleComponentSelector && req.version.isEmpty()) {
+        var ver = icebergVersions["${req.group}:${req.module}"]
+        if (ver == null) {
+          ver = icebergVersions["${req.group}:*"]
+        }
+        if (ver != null) {
+          useTarget(module("${req.group}:${req.module}:${ver}"), 'Managed for Iceberg')
+        }
+      }
+    }
+  }
+}
