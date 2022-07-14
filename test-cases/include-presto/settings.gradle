@@ -1,0 +1,23 @@
+
+buildscript {
+  dependencies {
+    def props = new Properties()
+    file(System.getProperty('pluginClasspathFile')).withInputStream {
+      props.load(it)
+    }
+    classpath(files(props.getProperty("implementation-classpath").split(":")))
+  }
+}
+
+apply plugin: 'org.caffinitas.gradle.includemavenbuild'
+
+includeMavenBuild {
+  builds {
+    create("presto") {
+      rootDirectory.set(file('/home/snazy/devel/prestodb/master'))
+      systemProperties["skipTests"] = "true"
+      systemProperties["maven.test.skip"] = "true"
+      // logLevel.set(1) // 0=DEBUG 1=INFO
+    }
+  }
+}
