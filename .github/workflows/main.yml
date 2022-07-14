@@ -1,0 +1,70 @@
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  java:
+    name: Java/Gradle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # Setup Gradle properties, heap requirements are for the "Integration test w/ Nessie".
+      - name: Setup gradle.properties
+        shell: bash
+        run: |
+          mkdir -p ~/.gradle
+          echo "org.gradle.jvmargs=-Xmx1024m -XX:MaxMetaspaceSize=768m -Dfile.encoding=UTF-8" >> ~/.gradle/gradle.properties
+          echo "org.gradle.vfs.watch=false" >> ~/.gradle/gradle.properties
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+
+      - name: Gradle / spotlessCheck
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: spotlessCheck
+
+      - name: Prepare Git clones for tests
+        run: |
+          mkdir -p test-cases/git-clones/prestodb
+          mkdir -p test-cases/git-clones/iceberg-for-presto
+          mkdir -p test-cases/git-clones/quarkus
+
+      - name: Clone Presto-DB repo for tests
+        uses: actions/checkout@v3
+        with:
+          path: test-cases/git-clones/prestodb
+          repository: prestodb/presto
+          ref: master
+
+      - name: Get Iceberg version for Presto
+        run: |
+          ICEBERG_VERSION="$(grep '<dep.iceberg.version>' test-cases/git-clones/prestodb/presto-iceberg/pom.xml | sed -e 's/.*>\([0-9][^<]*\).*/\1/')"
+          echo "ICEBERG_VERSION=${ICEBERG_VERSION}" >> ${GITHUB_ENV}
+
+      - name: Clone Iceberg ${{ env.ICEBERG_VERSION }} for Presto-DB repo for tests
+        uses: actions/checkout@v3
+        with:
+          path: test-cases/git-clones/iceberg-for-presto
+          repository: apache/iceberg
+          ref: apache-iceberg-${{ env.ICEBERG_VERSION }}
+
+      - name: Clone Quarkus repo for tests
+        uses: actions/checkout@v3
+        with:
+          path: test-cases/git-clones/quarkus
+          repository: quarkusio/quarkus
+          ref: main
+
+      - name: Gradle / check
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assemble check publishToMavenLocal -x spotlessCheck --stacktrace --info

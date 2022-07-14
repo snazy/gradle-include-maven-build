@@ -1,0 +1,22 @@
+
+buildscript {
+  dependencies {
+    def props = new Properties()
+    file(System.getProperty('pluginClasspathFile')).withInputStream {
+      props.load(it)
+    }
+    classpath(files(props.getProperty("implementation-classpath").split(":")))
+  }
+}
+
+apply plugin: 'org.caffinitas.gradle.includemavenbuild'
+
+includeMavenBuild {
+  builds {
+    create("quarkus") {
+      rootDirectory.set(file('../git-clones/quarkus'))
+      gradleBuildFileName.set('ignore-build-gradle-files')
+      disableDefaults()
+    }
+  }
+}

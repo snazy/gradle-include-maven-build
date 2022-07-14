@@ -1,0 +1,24 @@
+plugins {
+    id('java-library')
+}
+
+repositories {
+    mavenCentral()
+}
+
+// Resolve Presto dependencies to be resolved to the included projects.
+// In practice, the following piece of code would live in some projects-conventions-plugin in
+// buildSrc/ or so.
+configurations.all {
+    resolutionStrategy.dependencySubstitution.all {
+        if (requested instanceof ModuleComponentSelector && requested.group == 'com.facebook.presto') {
+            useTarget(project(":presto:${requested.module}"))
+        }
+    }
+}
+
+// Specify the Presto and Iceberg dependencies using the classic groupId:artifactId notation.
+dependencies {
+    implementation('com.facebook.presto:presto-iceberg')
+    implementation('org.apache.iceberg:iceberg-core')
+}
