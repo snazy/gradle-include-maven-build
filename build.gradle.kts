@@ -25,7 +25,7 @@ plugins {
 
 val versionAssertJ = "3.23.1"
 val versionJunit = "5.8.2"
-val versionMavenResolver = "1.7.3"
+val versionMavenResolver = "1.8.1"
 val versionMaven = "3.8.6"
 val versionGoogleJavaFormat = "1.15.0"
 
