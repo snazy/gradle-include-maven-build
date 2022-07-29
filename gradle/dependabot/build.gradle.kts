@@ -32,5 +32,5 @@ plugins {
   id("com.github.johnrengelman.plugin-shadow") version "7.1.2"
   id("com.gradle.plugin-publish") version "1.0.0"
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-  id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.5"
+  id("org.jetbrains.gradle.plugin.idea-ext") version "1.1.6"
 }
