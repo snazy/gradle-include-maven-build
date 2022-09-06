@@ -24,8 +24,6 @@ pluginManagement {
   // Cannot use a settings-script global variable/value, so pass the 'versions' Properties via
   // settings.extra around.
   val versions = java.util.Properties()
-  val pluginIdPattern =
-    java.util.regex.Pattern.compile("\\s*id\\(\"([^\"]+)\"\\) version \"([^\"]+)\"\\s*")
   settings.extra["pluginBuild.versions"] = versions
 
   repositories {
@@ -36,42 +34,20 @@ pluginManagement {
     }
   }
 
+  val versionIdeaExtPlugin = "1.1.6"
+  val versionShadowPlugin = "7.1.2"
+  val versionSpotlessPlugin = "6.10.0"
+
   plugins {
+    id("com.diffplug.spotless") version versionSpotlessPlugin
+    id("com.github.johnrengelman.plugin-shadow") version versionShadowPlugin
+    id("com.gradle.plugin-publish") version "1.0.0"
+    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+    id("org.jetbrains.gradle.plugin.idea-ext") version versionIdeaExtPlugin
 
-    // Note: this is NOT a real project but a hack for dependabot to manage the plugin versions.
-    //
-    // Background: dependabot only manages dependencies (incl Gradle plugins) in build.gradle[.kts]
-    // files. It scans the root build.gradle[.kts] fila and those in submodules referenced in
-    // settings.gradle[.kts].
-    // But dependabot does not manage managed plugin dependencies in settings.gradle[.kts].
-    // However, since dependabot is a "dumb search and replace engine", we can use a trick:
-    // 1. Have this "dummy" build.gradle.kts file with all managed plugin dependencies.
-    // 2. Add an `include()` to this build file in settings.gradle.kts, surrounded with an
-    //    `if (false)`, so Gradle does _not_ pick it up.
-    // 3. Parse this file in our settings.gradle.kts, provide a `ResolutionStrategy` to the
-    //    plugin dependencies.
-
-    val pulledVersions =
-      file("gradle/dependabot/build.gradle.kts")
-        .readLines()
-        .map { line -> pluginIdPattern.matcher(line) }
-        .filter { matcher -> matcher.matches() }
-        .associate { matcher -> matcher.group(1) to matcher.group(2) }
-
-    resolutionStrategy {
-      eachPlugin {
-        if (requested.version == null) {
-          val pluginId = requested.id.id
-          if (pulledVersions.containsKey(pluginId)) {
-            useVersion(pulledVersions[pluginId])
-          }
-        }
-      }
-    }
-
-    versions["versionIdeaExtPlugin"] = pulledVersions["org.jetbrains.gradle.plugin.idea-ext"]
-    versions["versionSpotlessPlugin"] = pulledVersions["com.diffplug.spotless"]
-    versions["versionShadowPlugin"] = pulledVersions["com.github.johnrengelman.plugin-shadow"]
+    versions["versionIdeaExtPlugin"] = versionIdeaExtPlugin
+    versions["versionSpotlessPlugin"] = versionSpotlessPlugin
+    versions["versionShadowPlugin"] = versionShadowPlugin
 
     // The project's settings.gradle.kts is "executed" before buildSrc's settings.gradle.kts and
     // build.gradle.kts.
@@ -107,7 +83,3 @@ fun includeProject(name: String, directory: String) {
 }
 
 includeProject("include-maven-build", "plugin")
-
-if (false) {
-  include("gradle:dependabot")
-}
