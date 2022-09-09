@@ -6,3 +6,6 @@ build/
 target/
 
 test-cases/git-clones/*
+
+.idea/
+
