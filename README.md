@@ -1,5 +1,7 @@
 # Gradle plugin to include Maven builds
 
+[![Build Status](https://github.com/snazy/gradle-include-maven-build/workflows/CI/badge.svg)](https://github.com/snazy/gradle-include-maven-build/actions/workflows/main.yml)
+
 **PROJECT STATUS: IN DEVELOPMENT - NOT RELEASED YET**
 
 **THIS PROJECT IS IN AN EARLY STAGE. Many things already work.**
