@@ -21,11 +21,6 @@ if (!JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_11)) {
 val baseVersion = file("version.txt").readText().trim()
 
 pluginManagement {
-  // Cannot use a settings-script global variable/value, so pass the 'versions' Properties via
-  // settings.extra around.
-  val versions = java.util.Properties()
-  settings.extra["pluginBuild.versions"] = versions
-
   repositories {
     mavenCentral() // prefer Maven Central, in case Gradle's repo has issues
     gradlePluginPortal()
@@ -33,41 +28,6 @@ pluginManagement {
       mavenLocal()
     }
   }
-
-  val versionIdeaExtPlugin = "1.1.6"
-  val versionShadowPlugin = "7.1.2"
-  val versionSpotlessPlugin = "6.10.0"
-
-  plugins {
-    id("com.diffplug.spotless") version versionSpotlessPlugin
-    id("com.github.johnrengelman.plugin-shadow") version versionShadowPlugin
-    id("com.gradle.plugin-publish") version "1.0.0"
-    id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    id("org.jetbrains.gradle.plugin.idea-ext") version versionIdeaExtPlugin
-
-    versions["versionIdeaExtPlugin"] = versionIdeaExtPlugin
-    versions["versionSpotlessPlugin"] = versionSpotlessPlugin
-    versions["versionShadowPlugin"] = versionShadowPlugin
-
-    // The project's settings.gradle.kts is "executed" before buildSrc's settings.gradle.kts and
-    // build.gradle.kts.
-    //
-    // Plugin and important dependency versions are defined here and shared with buildSrc via
-    // a properties file, and via an 'extra' property with all other modules of the build.
-    //
-    // This approach works fine with GitHub's dependabot as well
-    val pluginVersionsFile = file("build/plugin-versions.properties")
-    pluginVersionsFile.parentFile.mkdirs()
-    pluginVersionsFile.outputStream().use {
-      versions.store(it, "Plugin versions from settings.gradle.kts - DO NOT MODIFY!")
-    }
-  }
-}
-
-gradle.rootProject {
-  val prj = this
-  val versions = settings.extra["pluginBuild.versions"] as java.util.Properties
-  versions.forEach { k, v -> prj.extra[k.toString()] = v }
 }
 
 gradle.beforeProject {

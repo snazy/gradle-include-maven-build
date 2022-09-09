@@ -18,31 +18,12 @@ import org.jetbrains.gradle.ext.*
 
 plugins {
   `java-platform`
-  id("org.jetbrains.gradle.plugin.idea-ext")
-  id("io.github.gradle-nexus.publish-plugin")
+  alias(libs.plugins.idea.ext)
+  alias(libs.plugins.publish.plugin)
   `project-conventions`
 }
 
-val versionAssertJ = "3.23.1"
-val versionJunit = "5.9.0"
-val versionMavenResolver = "1.7.3"
-val versionMaven = "3.8.6"
-val versionGoogleJavaFormat = "1.15.0"
-
-extra["versionGoogleJavaFormat"] = versionGoogleJavaFormat
-
-dependencies {
-  constraints {
-    api("com.google.googlejavaformat:google-java-format:$versionGoogleJavaFormat")
-    api("org.apache.maven:maven-embedder:$versionMaven")
-    api("org.apache.maven:maven-compat:$versionMaven")
-    api("org.apache.maven.resolver:maven-resolver-connector-basic:$versionMavenResolver")
-    api("org.apache.maven.resolver:maven-resolver-transport-file:$versionMavenResolver")
-    api("org.apache.maven.resolver:maven-resolver-transport-http:$versionMavenResolver")
-    api("org.assertj:assertj-core:$versionAssertJ")
-    api("org.junit:junit-bom:$versionJunit")
-  }
-}
+extra["versionGoogleJavaFormat"] = libs.versions.google.java.format.get()
 
 javaPlatform { allowDependencies() }
 

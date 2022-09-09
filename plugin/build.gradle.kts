@@ -20,26 +20,24 @@ plugins {
   // Apply the Kotlin JVM plugin to add support for Kotlin.
   `kotlin-dsl`
   `maven-publish`
-  id("com.gradle.plugin-publish")
+  alias(libs.plugins.plugin.publish)
   `project-conventions`
 }
 
 dependencies {
-  implementation(platform(rootProject))
   implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-  implementation("org.apache.maven:maven-embedder")
-  implementation("org.apache.maven:maven-compat")
-  implementation("org.apache.maven.resolver:maven-resolver-connector-basic")
-  implementation("org.apache.maven.resolver:maven-resolver-transport-file")
-  implementation("org.apache.maven.resolver:maven-resolver-transport-http")
+  implementation(libs.maven.embedder)
+  implementation(libs.maven.compat)
+  implementation(libs.maven.resolver.connector.basic)
+  implementation(libs.maven.resolver.transport.file)
+  implementation(libs.maven.resolver.transport.http)
 
-  testImplementation(platform(rootProject))
   testImplementation(gradleTestKit())
-  testImplementation(platform("org.junit:junit-bom"))
+  testImplementation(platform(libs.junit.bom))
   testImplementation("org.junit.jupiter:junit-jupiter-api")
   testImplementation("org.junit.jupiter:junit-jupiter-params")
-  testImplementation("org.assertj:assertj-core")
+  testImplementation(libs.assertj.core)
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 

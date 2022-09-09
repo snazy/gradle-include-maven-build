@@ -1,0 +1,26 @@
+
+[versions]
+maven = "3.8.6"
+maven-resolver = "1.7.3"
+google-java-format = "1.15.0"
+shadow-plugin = "7.1.2"
+spotless-plugin = "6.10.0"
+
+[libraries]
+google-java-format = { group = "com.google.googlejavaformat", name = "google-java-format", version.ref = "google-java-format" }
+maven-embedder = { group = "org.apache.maven", name = "maven-embedder", version.ref = "maven" }
+maven-compat = { group = "org.apache.maven", name = "maven-compat", version.ref = "maven" }
+maven-resolver-connector-basic = { group = "org.apache.maven.resolver", name = "maven-resolver-connector-basic", version.ref = "maven-resolver" }
+maven-resolver-transport-file = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-file", version.ref = "maven-resolver" }
+maven-resolver-transport-http = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-http", version.ref = "maven-resolver" }
+assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.23.1" }
+junit-bom = { group = "org.junit", name = "junit-bom", version = "5.9.0" }
+spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless-plugin" }
+shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
+shadow = { id = "com.github.johnrengelman.plugin-shadow", version.ref = "shadow-plugin" }
+plugin-publish = { id = "com.gradle.plugin-publish", version = "1.0.0" }
+publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.6" }

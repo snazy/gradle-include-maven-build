@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import java.util.Properties
-
 plugins { `kotlin-dsl` }
 
 repositories {
@@ -26,21 +24,10 @@ repositories {
   }
 }
 
-// Use the versions declared in the top-level settings.gradle.kts. We can safely assume that
-// the properties file exists, because the top-level settings.gradle.kts is executed before
-// buildSrc's settings.gradle.kts or build.gradle.kts.
-val versions = Properties()
-
-file("../build/plugin-versions.properties").inputStream().use { versions.load(it) }
-
-val versionIdeaExtPlugin = versions["versionIdeaExtPlugin"]
-val versionSpotlessPlugin = versions["versionSpotlessPlugin"]
-val versionShadowPlugin = versions["versionShadowPlugin"]
-
 dependencies {
   implementation(gradleKotlinDsl())
-  implementation("com.diffplug.spotless:spotless-plugin-gradle:$versionSpotlessPlugin")
-  implementation("gradle.plugin.com.github.johnrengelman:shadow:$versionShadowPlugin")
+  implementation(libs.spotless)
+  implementation(libs.shadow)
 }
 
 kotlinDslPluginOptions { jvmTarget.set(JavaVersion.VERSION_11.toString()) }
