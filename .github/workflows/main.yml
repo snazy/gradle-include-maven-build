@@ -68,3 +68,12 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: assemble check publishToMavenLocal -x spotlessCheck --stacktrace --info
+
+      - name: Capture Test Reports
+        uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: test-results
+          path: |
+            **/build/reports/*
+            **/build/test-results/*
