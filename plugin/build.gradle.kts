@@ -21,6 +21,7 @@ plugins {
   `kotlin-dsl`
   `maven-publish`
   alias(libs.plugins.plugin.publish)
+  alias(libs.plugins.testrerun)
   `project-conventions`
 }
 

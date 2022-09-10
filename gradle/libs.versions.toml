@@ -24,3 +24,4 @@ shadow = { id = "com.github.johnrengelman.plugin-shadow", version.ref = "shadow-
 plugin-publish = { id = "com.gradle.plugin-publish", version = "1.0.0" }
 publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
 idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.6" }
+testrerun = { id = "org.caffinitas.gradle.testrerun", version = "0.1" }
