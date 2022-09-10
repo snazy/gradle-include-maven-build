@@ -90,18 +90,55 @@ constructor(
    * Maven build.
    */
   private fun handlePluginDependencies(gradleProject: Project) {
+    gradleProject.logger.debug(
+      "Handling dependencies of plugin in {}, {} plugins",
+      gradleProject,
+      mavenPrj.buildPlugins.size
+    )
     for (plugin in mavenPrj.buildPlugins) {
-      val ga = "${plugin.groupId}:${plugin.artifactId}"
+      gradleProject.logger.debug(
+        "Handling dependencies of plugin {}:{} in {}",
+        plugin.groupId,
+        plugin.artifactId,
+        gradleProject
+      )
+      val pluginGroupArtifact = "${plugin.groupId}:${plugin.artifactId}"
       // Note: using the "raw" `MavenProject` here, because the Gradle `Project` that wraps
       // the plugin's Maven build might not have been initialized, so the necessary fields
       // (Plugin version) might not have been initialized. Using the `MavenProject` there solves
       // that issue.
-      val pluginMavenProject = inclBuild.reactorProjects.get()[ga]
+      val pluginMavenProject = inclBuild.reactorProjects.get()[pluginGroupArtifact]
       if (pluginMavenProject != null && pluginMavenProject.version == plugin.version) {
+        gradleProject.logger.debug(
+          "Adding plugin build dependency for {}:{} to included project {}",
+          plugin.groupId,
+          plugin.artifactId,
+          pluginGroupArtifact
+        )
         gradleProject.dependencies.add(
           MAVEN_PLUGINS_CONFIGURATION_NAME,
-          gradleProject.dependencies.project(mapOf("path" to ext.includedGroupArtifacts[ga]))
+          gradleProject.dependencies.project(
+            mapOf("path" to ext.includedGroupArtifacts[pluginGroupArtifact])
+          )
         )
+      }
+      for (pluginDep in plugin.dependencies) {
+        val depGroupArtifact = "${pluginDep.groupId}:${pluginDep.artifactId}"
+        val depMavenProject = inclBuild.reactorProjects.get()[depGroupArtifact]
+        if (depMavenProject != null && depMavenProject.version == pluginDep.version) {
+          gradleProject.logger.info(
+            "Adding plugin dependency for {}:{} to included project {}",
+            plugin.groupId,
+            plugin.artifactId,
+            depGroupArtifact
+          )
+          gradleProject.dependencies.add(
+            MAVEN_PLUGINS_CONFIGURATION_NAME,
+            gradleProject.dependencies.project(
+              mapOf("path" to ext.includedGroupArtifacts[depGroupArtifact])
+            )
+          )
+        }
       }
     }
   }
@@ -153,6 +190,12 @@ constructor(
   ) {
     val configuration = task.project.configurations.findByName(configurationName)
     if (configuration != null) {
+      task.project.logger.debug(
+        "Adding task dependency for {} to task '{}' with configuration {}",
+        task,
+        task.name,
+        configuration
+      )
       task.dependsOn(configuration.getTaskDependencyFromProjectDependency(useDependedOn, task.name))
     }
   }

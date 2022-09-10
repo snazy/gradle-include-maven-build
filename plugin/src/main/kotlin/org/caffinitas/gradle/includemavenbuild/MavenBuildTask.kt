@@ -39,9 +39,12 @@ internal open class MavenBuildTask @Inject constructor(objects: ObjectFactory) :
 
   @Internal val includedBuild = objects.property(IncludedMavenBuild::class.java)
   // following input's are there to make Gradle aware of these settings for up-to-date checks
-  @Input val includedBuildProfiles = objects.listProperty(String::class.java)
+  @Input val includedBuildActiveProfiles = objects.listProperty(String::class.java)
+  @Input val includedBuildInactiveProfiles = objects.listProperty(String::class.java)
   @Input
   val includedBuildSystemProperties = objects.mapProperty(String::class.java, String::class.java)
+  @Input
+  val includedBuildUserProperties = objects.mapProperty(String::class.java, String::class.java)
   @Input val includedBuildMavenPhases = objects.listProperty(String::class.java)
 
   @Internal val mavenProject = objects.property(MavenProject::class.java)
@@ -61,7 +64,6 @@ internal open class MavenBuildTask @Inject constructor(objects: ObjectFactory) :
     executionRequest.pom = inclBuild.rootDirectory.get().file("pom.xml").asFile
 
     // From org.apache.maven.DefaultMaven.doExecute()
-    executionRequest.userProperties.putAll(inclBuild.systemProperties.get())
     executionRequest.userProperties.putAll(systemProperties.get())
     executionRequest.startTime = Date()
 
@@ -104,14 +106,12 @@ internal open class MavenBuildTask @Inject constructor(objects: ObjectFactory) :
     }
   }
 
-  private fun submit() {}
-
-  private fun submitWorker() {}
-
   internal fun applyIncludedBuild(inclBuild: IncludedMavenBuild) {
     includedBuild.set(inclBuild)
-    includedBuildProfiles.set(inclBuild.profiles.get())
+    includedBuildActiveProfiles.set(inclBuild.activeProfiles.get())
+    includedBuildInactiveProfiles.set(inclBuild.inactiveProfiles.get())
     includedBuildSystemProperties.set(inclBuild.systemProperties.get())
+    includedBuildUserProperties.set(inclBuild.userProperties.get())
     includedBuildMavenPhases.set(inclBuild.mavenPhases)
   }
 }

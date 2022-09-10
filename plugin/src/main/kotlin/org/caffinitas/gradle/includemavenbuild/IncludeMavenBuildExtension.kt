@@ -73,7 +73,13 @@ constructor(
   val logLevel = objects.property(Int::class.java)
 
   /** Active Maven profiles. */
-  val profiles = objects.listProperty(String::class.java)
+  val activeProfiles = objects.listProperty(String::class.java)
+
+  /** Inactive Maven profiles. */
+  val inactiveProfiles = objects.listProperty(String::class.java)
+
+  /** User properties set for the Maven builds. */
+  val userProperties = objects.mapProperty(String::class.java, String::class.java)
 
   /** System properties set for the Maven builds. */
   val systemProperties = objects.mapProperty(String::class.java, String::class.java)
@@ -130,6 +136,7 @@ constructor(
     systemProperties.put("checkstyle.skip", "true")
     systemProperties.put("license.skipCheckLicense", "true")
     // TODO keep the following??
+    systemProperties.put("format.skip", "true")
     systemProperties.put("enforcer.skip", "true")
     systemProperties.put("mdep.analyze.skip", "true")
     systemProperties.put("mdep.analyze.failBuild", "false")
@@ -160,7 +167,10 @@ constructor(
     executionRequest.isInteractiveMode = false
     executionRequest.isOffline = gradle.startParameter.isOffline
     executionRequest.setUseReactor(true)
-    executionRequest.activeProfiles = profiles.get()
+    activeProfiles.get().forEach { p -> executionRequest.addActiveProfile(p) }
+    inactiveProfiles.get().forEach { p -> executionRequest.addInactiveProfile(p) }
+    systemProperties.get().forEach { (k, v) -> executionRequest.systemProperties[k] = v }
+    userProperties.get().forEach { (k, v) -> executionRequest.userProperties[k] = v }
     executionRequest.setBaseDirectory(rootDirectory.get().asFile)
     executionRequest.loggingLevel = logLevel.get()
     executionRequest.systemProperties["maven.version"] = mavenRuntimeVersion()
