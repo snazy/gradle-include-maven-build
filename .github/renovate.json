@@ -6,7 +6,8 @@
   "packageRules": [
     {
       "matchManagers": ["maven", "gradle", "gradle-wrapper", "npm", "pip_requirements", "pip_setup"],
-      "automerge": true
+      "automerge": true,
+      "platformAutomerge": true
     }
   ],
   "rebaseWhen": "conflicted",
