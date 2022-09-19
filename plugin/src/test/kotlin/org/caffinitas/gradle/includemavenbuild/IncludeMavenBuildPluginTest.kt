@@ -55,7 +55,8 @@ class IncludeMavenBuildPluginTest {
       
       apply plugin: 'org.caffinitas.gradle.includemavenbuild'
       
-    """.trimIndent()
+    """.trimIndent(
+      )
     )
   }
 
