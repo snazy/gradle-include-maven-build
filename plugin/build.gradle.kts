@@ -88,7 +88,8 @@ val writePluginClasspathMetadata by
       testResourcesFile.writeText(
         """
     implementation-classpath=${sourceSets.getByName("main").runtimeClasspath.files.joinToString(":")}
-    """.trimIndent()
+    """.trimIndent(
+        )
       )
     }
   }

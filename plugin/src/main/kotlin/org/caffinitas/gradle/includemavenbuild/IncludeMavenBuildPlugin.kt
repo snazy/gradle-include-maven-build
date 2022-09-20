@@ -152,7 +152,9 @@ constructor(private val objects: ObjectFactory) : Plugin<Settings> {
       CollectionUtils.collect<MavenProject, ProjectBuildingResult, Set<MavenProject?>>(
         allProjects,
         reactorProjects
-      ) { obj: ProjectBuildingResult -> obj.project }
+      ) { obj: ProjectBuildingResult ->
+        obj.project
+      }
 
       inclBuild.reactorProjects.set(
         reactorProjects
