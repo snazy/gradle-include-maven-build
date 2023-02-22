@@ -22,6 +22,6 @@ shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", ve
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
 shadow = { id = "com.github.johnrengelman.plugin-shadow", version.ref = "shadow-plugin" }
 plugin-publish = { id = "com.gradle.plugin-publish", version = "1.1.0" }
-publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "1.1.0" }
+publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "1.2.0" }
 idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.7" }
 testrerun = { id = "org.caffinitas.gradle.testrerun", version = "0.1" }
