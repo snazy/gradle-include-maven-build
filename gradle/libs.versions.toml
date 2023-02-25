@@ -3,7 +3,7 @@
 maven = "3.9.0"
 maven-resolver = "1.7.3"
 google-java-format = "1.16.0"
-shadow-plugin = "7.1.2"
+shadow-plugin = "8.0.0"
 spotless-plugin = "6.15.0"
 
 [libraries]
