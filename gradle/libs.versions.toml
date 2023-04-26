@@ -14,7 +14,7 @@ maven-resolver-connector-basic = { group = "org.apache.maven.resolver", name = "
 maven-resolver-transport-file = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-file", version.ref = "maven-resolver" }
 maven-resolver-transport-http = { group = "org.apache.maven.resolver", name = "maven-resolver-transport-http", version.ref = "maven-resolver" }
 assertj-core = { group = "org.assertj", name = "assertj-core", version = "3.24.2" }
-junit-bom = { group = "org.junit", name = "junit-bom", version = "5.9.2" }
+junit-bom = { group = "org.junit", name = "junit-bom", version = "5.9.3" }
 spotless = { group = "com.diffplug.spotless", name = "spotless-plugin-gradle", version.ref = "spotless-plugin" }
 shadow = { group = "gradle.plugin.com.github.johnrengelman", name = "shadow", version.ref = "shadow-plugin" }
 
