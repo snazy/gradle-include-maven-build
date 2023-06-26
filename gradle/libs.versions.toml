@@ -1,6 +1,6 @@
 
 [versions]
-maven = "3.9.2"
+maven = "3.9.3"
 maven-resolver = "1.9.13"
 google-java-format = "1.17.0"
 shadow-plugin = "8.0.0"
