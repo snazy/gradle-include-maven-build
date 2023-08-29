@@ -4,7 +4,7 @@ maven = "3.9.4"
 maven-resolver = "1.9.15"
 google-java-format = "1.17.0"
 shadow-plugin = "8.0.0"
-spotless-plugin = "6.20.0"
+spotless-plugin = "6.21.0"
 
 [libraries]
 google-java-format = { group = "com.google.googlejavaformat", name = "google-java-format", version.ref = "google-java-format" }
