@@ -1,7 +1,7 @@
 
 [versions]
 maven = "3.9.4"
-maven-resolver = "1.9.15"
+maven-resolver = "1.9.16"
 google-java-format = "1.17.0"
 shadow-plugin = "8.0.0"
 spotless-plugin = "6.21.0"
