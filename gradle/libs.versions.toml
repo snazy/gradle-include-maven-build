@@ -23,5 +23,5 @@ spotless = { id = "com.diffplug.spotless", version.ref = "spotless-plugin" }
 shadow = { id = "com.github.johnrengelman.plugin-shadow", version.ref = "shadow-plugin" }
 plugin-publish = { id = "com.gradle.plugin-publish", version = "1.2.1" }
 publish-plugin = { id = "io.github.gradle-nexus.publish-plugin", version = "1.3.0" }
-idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.7" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version = "1.1.8" }
 testrerun = { id = "org.caffinitas.gradle.testrerun", version = "0.1" }
