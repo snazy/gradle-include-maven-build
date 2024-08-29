@@ -11,7 +11,7 @@ jobs:
     name: Java/Gradle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # Setup Gradle properties, heap requirements are for the "Integration test w/ Nessie".
       - name: Setup gradle.properties
@@ -39,7 +39,7 @@ jobs:
           mkdir -p test-cases/git-clones/quarkus
 
       - name: Clone Presto-DB repo for tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: test-cases/git-clones/prestodb
           repository: prestodb/presto
@@ -51,14 +51,14 @@ jobs:
           echo "ICEBERG_VERSION=${ICEBERG_VERSION}" >> ${GITHUB_ENV}
 
       - name: Clone Iceberg ${{ env.ICEBERG_VERSION }} for Presto-DB repo for tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: test-cases/git-clones/iceberg-for-presto
           repository: apache/iceberg
           ref: apache-iceberg-${{ env.ICEBERG_VERSION }}
 
       - name: Clone Quarkus repo for tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: test-cases/git-clones/quarkus
           repository: quarkusio/quarkus
